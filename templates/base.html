@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Project Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    {% if session['user'] %}
+    <div class="container">
+        <header class="header">
+            <nav class="navbar">
+                <a href="/" class="navbar-brand">Project Dashboard</a>
+                <ul class="navbar-nav">
+                    <li><a href="/logout" class="nav-link">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+    {% else %}
+    <p class="not-logged-in">Not logged in</p>
+    {% endif %}
+</body>
+</html>

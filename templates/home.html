@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+
+<div class="project-container">
+    <h1 class="page-title">Projects</h1>
+
+    <!-- Add Project Button -->
+    <div class="add-project-btn">
+        <a href="{{ url_for('add_project') }}" class="btn-primary">Add Project</a>
+    </div>
+
+    <div class="project-list">
+        {% for project in projects %}
+            <div class="project-item">
+                <a href="{{ url_for('project_details', project_id=project._id) }}" class="project-link">
+                    {{ project.name }}
+                </a>
+
+                <div class="action-buttons">
+                    <a href="{{ url_for('update_project', project_id=project._id) }}" class="btn-update" title="Update">&#9998;</a>
+
+                    <form method="POST" action="{{ url_for('delete_project', project_id=project._id) }}" class="delete-form">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this project?')" title="Delete">
+                            <a>&#10060;</a>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

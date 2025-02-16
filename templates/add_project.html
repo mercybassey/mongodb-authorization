@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Project{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="page-title">Add New Project</h1>
+
+    <form method="POST" action="{{ url_for('add_project') }}" class="project-form">
+        <div class="form-group">
+            <label for="name">Project Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter project name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Project Description</label>
+            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter project description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="start_date">Start Date</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">End Date</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" required>
+        </div>
+    
+        <button type="submit" class="btn-submit">Add Project</button>
+    </form>    
+</div>
+{% endblock %}

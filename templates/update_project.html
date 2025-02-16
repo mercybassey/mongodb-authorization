@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Update Project{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Update Project: {{ project.name }}</h1>
+
+    <form method="POST" action="{{ url_for('update_project', project_id=project._id) }}" class="project-form">
+        <div class="form-group">
+            <label for="name">Project Name</label>
+            <input type="text" id="name" name="name" value="{{ project.name }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Project Description</label>
+            <textarea id="description" name="description" rows="3" class="form-control">{{ project.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="start_date">Start Date</label>
+            <input type="date" id="start_date" name="start_date" value="{{ project.start_date.strftime('%Y-%m-%d') }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">End Date</label>
+            <input type="date" id="end_date" name="end_date" value="{{ project.end_date.strftime('%Y-%m-%d') }}" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Update Project</button>
+    </form>
+</div>
+{% endblock %}
