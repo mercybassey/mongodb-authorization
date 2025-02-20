@@ -12,6 +12,9 @@ import os
 
 from permit import Permit
 
+import hypercorn.asyncio
+from hypercorn.config import Config
+
 # Load environment variables
 load_dotenv()
 
@@ -56,7 +59,6 @@ def login():
     )
 
 # Callback route
-
 @app.route('/login/callback')
 def callback():
     token = oauth.auth0.authorize_access_token()
@@ -115,23 +117,30 @@ def home():
 # Add Project route
 @app.route('/add_project', methods=['GET', 'POST'])
 @login_required
-def add_project():
+async def add_project():
     if 'user' not in session:
         return redirect(url_for('login'))
     
     if request.method == 'POST':
+        
+        user_email = session['user']['userinfo']['email']
         name = request.form['name']
         description = request.form['description']
+        department = request.form['department']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
-        
-        # Insert project into the database
-        mongo.db.projects.insert_one({
+
+        new_project = {
             'name': name,
             'description': description,
             'start_date': datetime.strptime(start_date, '%Y-%m-%d'),
-            'end_date': datetime.strptime(end_date, '%Y-%m-%d')
-        })
+            'end_date': datetime.strptime(end_date, '%Y-%m-%d'),
+            'creator': user_email,
+            'department': department
+        }
+        
+        # Insert project into the database
+        mongo.db.projects.insert_one(new_project)
         return redirect(url_for('home'))
 
     return render_template('add_project.html')
@@ -139,7 +148,7 @@ def add_project():
 # Update Project route
 @app.route('/update_project/<project_id>', methods=['GET', 'POST'])
 @login_required
-def update_project(project_id):
+async def update_project(project_id):
     if 'user' not in session:
         return redirect(url_for('login'))
     
@@ -154,6 +163,7 @@ def update_project(project_id):
         description = request.form['description']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
+        department = request.form['department']
         
         # Update project details in the database
         mongo.db.projects.update_one({'_id': ObjectId(project_id)}, {
@@ -161,7 +171,8 @@ def update_project(project_id):
                 'name': name,
                 'description': description,
                 'start_date': datetime.strptime(start_date, '%Y-%m-%d'),
-                'end_date': datetime.strptime(end_date, '%Y-%m-%d')
+                'end_date': datetime.strptime(end_date, '%Y-%m-%d'),
+                'department' : department
             }
         })
         return redirect(url_for('home'))
@@ -173,7 +184,7 @@ def update_project(project_id):
 # Delete Project route
 @app.route('/delete_project/<project_id>', methods=['POST'])
 @login_required
-def delete_project(project_id):
+async def delete_project(project_id):
     if 'user' not in session:
         return redirect(url_for('login'))
     
@@ -198,7 +209,9 @@ def project_details(project_id):
         
     return render_template('project_details.html', project=project)
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
+if __name__ == '__main__':
+    config = Config()
+    config.bind = ["0.0.0.0:5000"]
+    asyncio.run(hypercorn.asyncio.serve(app, config))
 
