@@ -36,7 +36,7 @@ oauth.register(
 # Permit.io setup
 permit = Permit(
     pdp="http://localhost:7766",
-    token="permit_key_nxyDFSe6TL5UAvzxQlffOmIKbPIz33roEtIIneicgdcUxuzP2HLIbHiZhRjuCTnYFJTwvmZsLS7b4fwT8shfqY",
+    token="",
 )
 
 # Decorator to enforce authentication
