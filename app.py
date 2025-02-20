@@ -6,7 +6,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from functools import wraps
-import pymongo
 import asyncio
 import os
 
